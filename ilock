@@ -20,8 +20,8 @@ SECURITY_SCRIPT="security.py"
 show_banner() {
     echo -e "${BLUE}"
     echo "╔═══════════════════════════════════════╗"
-    echo "║       iLock Management System         ║"
-    echo "║    Smart Facial Recognition Lock      ║"
+    echo "║         iLock Management System       ║"
+    echo "║    Smart Facial Recognition Lock     ║"
     echo "╚═══════════════════════════════════════╝"
     echo -e "${NC}"
 }
@@ -33,12 +33,14 @@ show_help() {
     echo "  ilock picture   - Capture photos for face recognition training"
     echo "  ilock train     - Train the face recognition model"
     echo "  ilock security  - Start the security/door lock system"
+    echo "  ilock clean     - Remove existing dataset and model (start fresh)"
     echo "  ilock help      - Show this help message"
     echo ""
     echo -e "${YELLOW}Examples:${NC}"
     echo "  ilock picture   # Add new people to the system"
     echo "  ilock train     # Train model after adding photos"
     echo "  ilock security  # Start the door lock security system"
+    echo "  ilock clean     # Remove all data and start over"
     echo ""
 }
 
@@ -165,6 +167,53 @@ ilock_security() {
     echo -e "${BLUE}Security system stopped.${NC}"
 }
 
+# Function to clean dataset and model
+ilock_clean() {
+    show_banner
+    echo -e "${CYAN}=== Clean Mode ===${NC}"
+    echo -e "${RED}WARNING: This will permanently delete:${NC}"
+    echo "  • All photos in the dataset/ directory"
+    echo "  • The trained model (encodings.pickle)"
+    echo ""
+    echo -e "${YELLOW}This action cannot be undone!${NC}"
+    echo ""
+    
+    # Ask for confirmation
+    echo -e "${GREEN}Are you sure you want to continue? (yes/no):${NC} "
+    read -r confirmation
+    
+    # Convert to lowercase for comparison
+    confirmation=$(echo "$confirmation" | tr '[:upper:]' '[:lower:]')
+    
+    if [ "$confirmation" != "yes" ] && [ "$confirmation" != "y" ]; then
+        echo -e "${BLUE}Clean operation cancelled.${NC}"
+        exit 0
+    fi
+    
+    echo ""
+    echo -e "${YELLOW}Cleaning dataset and model...${NC}"
+    
+    # Remove dataset directory
+    if [ -d "dataset" ]; then
+        rm -rf dataset
+        echo -e "${GREEN}✓ Dataset directory removed${NC}"
+    else
+        echo -e "${YELLOW}• Dataset directory not found (already clean)${NC}"
+    fi
+    
+    # Remove encodings.pickle
+    if [ -f "encodings.pickle" ]; then
+        rm -f encodings.pickle
+        echo -e "${GREEN}✓ Model file (encodings.pickle) removed${NC}"
+    else
+        echo -e "${YELLOW}• Model file not found (already clean)${NC}"
+    fi
+    
+    echo ""
+    echo -e "${GREEN}✓ Clean completed successfully!${NC}"
+    echo -e "${CYAN}You can now start fresh with 'ilock picture'${NC}"
+}
+
 # Main script logic
 case "$1" in
     picture)
@@ -175,6 +224,9 @@ case "$1" in
         ;;
     security)
         ilock_security
+        ;;
+    clean)
+        ilock_clean
         ;;
     help|--help|-h)
         show_help

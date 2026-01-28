@@ -1,6 +1,7 @@
 import cv2
 from picamera2 import Picamera2
 import os
+import sys
 
 if len(sys.argv) > 1:
     name = sys.argv[1]
