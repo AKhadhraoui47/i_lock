@@ -2,7 +2,10 @@ import cv2
 from picamera2 import Picamera2
 import os
 
-name = 'Hamza'
+if len(sys.argv) > 1:
+    name = sys.argv[1]
+else:
+    name = input("Enter the person's name: ")
 
 os.makedirs(f"dataset/{name}", exist_ok=True)
 
