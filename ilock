@@ -1,22 +1,16 @@
 #!/bin/bash
-
-# iLock - Smart Door Lock Management System
-# A wrapper script for managing facial recognition door lock
-
-# Color codes for better UX
+ 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
-NC='\033[0m' # No Color
+NC='\033[0m'  
 
-# Script paths (adjust these to your actual script locations)
 STUDIO_SCRIPT="studio.py"
 GYM_SCRIPT="gym.py"
 SECURITY_SCRIPT="security.py"
 
-# Function to display banner
 show_banner() {
     echo -e "${BLUE}"
     echo "╔═══════════════════════════════════════╗"
@@ -25,8 +19,7 @@ show_banner() {
     echo "╚═══════════════════════════════════════╝"
     echo -e "${NC}"
 }
-
-# Function to display help
+ 
 show_help() {
     show_banner
     echo -e "${GREEN}Usage:${NC}"
@@ -37,14 +30,14 @@ show_help() {
     echo "  ilock help      - Show this help message"
     echo ""
     echo -e "${YELLOW}Examples:${NC}"
-    echo "  ilock picture   # Add new people to the system"
-    echo "  ilock train     # Train model after adding photos"
-    echo "  ilock security  # Start the door lock security system"
-    echo "  ilock clean     # Remove all data and start over"
+    echo "  ilock picture    
+    echo "  ilock train      
+    echo "  ilock security   
+    echo "  ilock clean      
     echo ""
 }
 
-# Function to check if script exists
+ 
 check_script() {
     if [ ! -f "$1" ]; then
         echo -e "${RED}Error: Script '$1' not found!${NC}"
@@ -53,7 +46,6 @@ check_script() {
     fi
 }
 
-# Function to handle picture capture
 ilock_picture() {
     show_banner
     echo -e "${CYAN}=== Photo Capture Mode ===${NC}"
@@ -67,28 +59,28 @@ ilock_picture() {
         echo -e "${GREEN}Enter the name of the person (or 'done' to finish):${NC} "
         read -r person_name
         
-        # Check if user wants to exit
+         
         if [ "$person_name" = "done" ] || [ "$person_name" = "DONE" ]; then
             echo -e "${BLUE}Photo capture session completed.${NC}"
             echo -e "${YELLOW}Don't forget to run 'ilock train' to update the model!${NC}"
             break
         fi
         
-        # Validate name is not empty
+         
         if [ -z "$person_name" ]; then
             echo -e "${RED}Error: Name cannot be empty. Please try again.${NC}"
             continue
         fi
         
-        # Create dataset directory if it doesn't exist
+         
         mkdir -p "dataset/$person_name"
         
         echo -e "${CYAN}Starting photo capture for: ${GREEN}$person_name${NC}"
         echo -e "${YELLOW}Press SPACE to take photos, ESC to finish with this person.${NC}"
         echo ""
         
-        # Run studio.py with the person's name as argument
-        # Modify studio.py to accept name as command line argument
+         
+         
         python3 "$STUDIO_SCRIPT" "$person_name"
         
         echo ""
@@ -96,8 +88,7 @@ ilock_picture() {
         echo ""
     done
 }
-
-# Function to handle training
+ 
 ilock_train() {
     show_banner
     echo -e "${CYAN}=== Model Training Mode ===${NC}"
@@ -106,14 +97,14 @@ ilock_train() {
     
     check_script "$GYM_SCRIPT"
     
-    # Check if dataset directory exists
+     
     if [ ! -d "dataset" ]; then
         echo -e "${RED}Error: No dataset directory found!${NC}"
         echo -e "${YELLOW}Please run 'ilock picture' first to capture photos.${NC}"
         exit 1
     fi
     
-    # Count number of people in dataset
+     
     num_people=$(find dataset -mindepth 1 -maxdepth 1 -type d | wc -l)
     
     if [ "$num_people" -eq 0 ]; then
@@ -126,7 +117,7 @@ ilock_train() {
     echo -e "${CYAN}Starting training...${NC}"
     echo ""
     
-    # Run gym.py
+     
     python3 "$GYM_SCRIPT"
     
     if [ $? -eq 0 ]; then
@@ -140,7 +131,6 @@ ilock_train() {
     fi
 }
 
-# Function to handle security system
 ilock_security() {
     show_banner
     echo -e "${CYAN}=== Security System Mode ===${NC}"
@@ -149,7 +139,7 @@ ilock_security() {
     
     check_script "$SECURITY_SCRIPT"
     
-    # Check if encodings.pickle exists
+     
     if [ ! -f "encodings.pickle" ]; then
         echo -e "${RED}Error: encodings.pickle not found!${NC}"
         echo -e "${YELLOW}Please run 'ilock train' first to create the model.${NC}"
@@ -160,14 +150,13 @@ ilock_security() {
     echo -e "${YELLOW}Press 'q' or ESC to quit.${NC}"
     echo ""
     
-    # Run security.py
+     
     python3 "$SECURITY_SCRIPT"
     
     echo ""
     echo -e "${BLUE}Security system stopped.${NC}"
 }
 
-# Function to clean dataset and model
 ilock_clean() {
     show_banner
     echo -e "${CYAN}=== Clean Mode ===${NC}"
@@ -178,11 +167,11 @@ ilock_clean() {
     echo -e "${YELLOW}This action cannot be undone!${NC}"
     echo ""
     
-    # Ask for confirmation
+     
     echo -e "${GREEN}Are you sure you want to continue? (yes/no):${NC} "
     read -r confirmation
     
-    # Convert to lowercase for comparison
+     
     confirmation=$(echo "$confirmation" | tr '[:upper:]' '[:lower:]')
     
     if [ "$confirmation" != "yes" ] && [ "$confirmation" != "y" ]; then
@@ -193,7 +182,7 @@ ilock_clean() {
     echo ""
     echo -e "${YELLOW}Cleaning dataset and model...${NC}"
     
-    # Remove dataset directory
+     
     if [ -d "dataset" ]; then
         rm -rf dataset
         echo -e "${GREEN}✓ Dataset directory removed${NC}"
@@ -201,7 +190,7 @@ ilock_clean() {
         echo -e "${YELLOW}• Dataset directory not found (already clean)${NC}"
     fi
     
-    # Remove encodings.pickle
+     
     if [ -f "encodings.pickle" ]; then
         rm -f encodings.pickle
         echo -e "${GREEN}✓ Model file (encodings.pickle) removed${NC}"
@@ -214,7 +203,7 @@ ilock_clean() {
     echo -e "${CYAN}You can now start fresh with 'ilock picture'${NC}"
 }
 
-# Main script logic
+ 
 case "$1" in
     picture)
         ilock_picture
