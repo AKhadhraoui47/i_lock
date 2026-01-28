@@ -14,7 +14,6 @@ knownEncodings = []
 knownNames = []
 
 for (i, imagePath) in enumerate(imagePaths):
-	 
 	print("[INFO] processing image {}/{}".format(i + 1,
 		len(imagePaths)))
 	name = imagePath.split(os.path.sep)[-2]
@@ -26,7 +25,7 @@ for (i, imagePath) in enumerate(imagePaths):
 	for encoding in encodings:	 
 		knownEncodings.append(encoding)
 		knownNames.append(name)
-
+		
 print("[INFO] serializing encodings...")
 data = {"encodings": knownEncodings, "names": knownNames}
 f = open("encodings.pickle", "wb")

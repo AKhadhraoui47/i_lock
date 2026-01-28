@@ -28,63 +28,37 @@ start_time = time.time()
 
 while True:
 	 
-	 
 	frame = picam2.capture_array()
-	 
 	frame = imutils.resize(frame, width=500)
-	 
 	boxes = face_recognition.face_locations(frame)
-	 
 	encodings = face_recognition.face_encodings(frame, boxes)
 	names = []
-
-	 
 	for encoding in encodings:
-		 
-		 
 		matches = face_recognition.compare_faces(data["encodings"],
 			encoding)
 		name = "Unknown"  
-
-		 
 		if True in matches:
-			 
-			 
-			 
 			matchedIdxs = [i for (i, b) in enumerate(matches) if b]
 			counts = {}
-
-			 
-			 
 			for i in matchedIdxs:
 				name = data["names"][i]
 				counts[name] = counts.get(name, 0) + 1
-
-			 
-			 
-			 
 			name = max(counts, key=counts.get)
-
-			 
 			if currentname != name:
 				currentname = name
 				print(f"[RECOGNISED] {currentname}")
 				
-				 
 				print("[SERVO] Unlocking door")
 				servo.angle = 90
-				time.sleep = 2
-				 
+				time.sleep = 2 
 		else:
 			if currentname != "Unknown":
 				currentname = "Unknown"
 				print("[WARNING] Unknown detected")
 				servo.angle = 0
 				print("[SERVO] Door locked") 
-		 
 		names.append(name)
 
-	 
 	for ((top, right, bottom, left), name) in zip(boxes, names):
 		 
 		cv2.rectangle(frame, (left, top), (right, bottom),
@@ -92,15 +66,12 @@ while True:
 		y = top - 15 if top - 15 > 15 else top + 15
 		cv2.putText(frame, name, (left, y), cv2.FONT_HERSHEY_SIMPLEX,
 			.8, (0, 255, 255), 2)
-
 	 
 	cv2.imshow("Facial Recognition is Running", frame)
 	key = cv2.waitKey(1) & 0xFF
-
 	 
 	if key == 27:
 		break
-
 	frame_count += 1
 
 elapsed_time = time.time() - start_time
