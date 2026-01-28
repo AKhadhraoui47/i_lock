@@ -495,7 +495,7 @@ The system is now active! Here's what you'll see:
 - Door locks when unknown face appears
 - Multiple faces can be detected simultaneously
 
-**To exit:** Press `Q` or `ESC`
+**To exit:** Press `ESC`
 
 ---
 
