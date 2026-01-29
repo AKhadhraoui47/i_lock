@@ -44,14 +44,7 @@ pip3 install face_recognition imutils gpiozero opencv-python
 ## Quick Start
 
 ### 1. Install iLock
-```bash
-# Clone the repository
-git clone https://github.com/AKhadhraoui47/i_lock.git
-cd i_lock
-
-# Make the wrapper script executable
-chmod +x ilock
-```
+You can push the project to a repository in your github and make it available for people to clone it.
 
 ### 2. Add People to the System
 ```bash
